@@ -296,8 +296,22 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 	free(allocated_memory);
 	}
 
+#define OUT(data) std::cout << data
+
+#define TIMED_TEST(function, arg1, arg2, result) { \
+	double startTime = (double)clock() / CLOCKS_PER_SEC; \
+	function(arg1, arg2); \
+	double endTime = (double)clock() / CLOCKS_PER_SEC; \
+	result = endTime - startTime; \
+	}
+
+void WriteTime(double time) {
+	int us = (int)(time * 1000000);
+	OUT(us / 1000); OUT("."); OUT(us % 1000); OUT("ms");
+	}
+
 void RunTest(int log_size) {
-    std::cout << "beginning test: 2^"; std::cout << log_size; std::cout << "\n";
+    OUT("beginning test: 2^"); OUT(log_size); OUT("\n");
 
 	int test_data_size = 1 << log_size;
 	ELEMENT* test_data = reinterpret_cast<ELEMENT*> (malloc(test_data_size * (sizeof(ELEMENT))));
@@ -311,30 +325,16 @@ void RunTest(int log_size) {
 		}
 	
 	float time1 = -1;
-	{
-	float startTime = (float)clock() / CLOCKS_PER_SEC;
-	ShelfSort(test_data, test_data_size);
-	float endTime = (float)clock() / CLOCKS_PER_SEC;
-	time1 = endTime - startTime;
-	}
+	TIMED_TEST(ShelfSort, test_data, test_data_size, time1);
 
-	float time_sorted = -1;
-	///*
-	{
-	float startTime = (float)clock() / CLOCKS_PER_SEC;
-	ShelfSort(test_data, test_data_size);
-	float endTime = (float)clock() / CLOCKS_PER_SEC;
-	time_sorted = endTime - startTime;
-	}
-	//*/
+	float time1_sorted = -1;
+	TIMED_TEST(ShelfSort, test_data, test_data_size, time1_sorted);
 	
-	float time_standard = -1;
-	{
-	float startTime = (float)clock() / CLOCKS_PER_SEC;
-	std::stable_sort(test_data2, &test_data2[test_data_size]);
-	float endTime = (float)clock() / CLOCKS_PER_SEC;
-	time_standard = endTime - startTime;
-	}
+	float time_std = -1;
+	TIMED_TEST(std::stable_sort, test_data2, &test_data2[test_data_size], time_std);
+
+	float time_std_sorted = -1;
+	TIMED_TEST(std::stable_sort, test_data2, &test_data2[test_data_size], time_std_sorted);
 
 	bool correct_sort = true;
 	for (int i=0; i < test_data_size; i++) {
@@ -343,10 +343,11 @@ void RunTest(int log_size) {
 			}
 		}
 
-	std::cout << "shelfsort time: "; std::cout << time1;
-	std::cout << " / presorted: "; std::cout << time_sorted; std::cout << "\n";
-	std::cout << "std::stable_sort time: "; std::cout << time_standard; std::cout << "\n";
-	std::cout << "matching sort = "; std::cout << correct_sort; std::cout << "\n\n";
+	OUT("shelfsort time: "); WriteTime(time1);
+	OUT(" / presorted: "); WriteTime(time1_sorted); OUT("\n");
+	OUT("std::stable_sort time: "); WriteTime(time_std);
+	OUT(" / presorted: "); WriteTime(time_std_sorted); OUT("\n");
+	OUT("matching sort = "); OUT(correct_sort); OUT("\n\n");
 	
 	free(test_data);
 	free(test_data2);
