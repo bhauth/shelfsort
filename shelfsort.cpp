@@ -199,7 +199,7 @@ void FinalBlockSorting(ELEMENT* p1, ELEMENT* scratch, uint32_t* indices, int blo
 	}
 
 
-void DoSort(ELEMENT* arr, unsigned int size) {
+void ShelfSort(ELEMENT* arr, unsigned int size) {
 	// determine memory size
 	unsigned int v = size;
 	unsigned int log_size = 0;
@@ -312,7 +312,7 @@ void RunTest(int log_size) {
 	float time1 = -1;
 	{
 	float startTime = (float)clock() / CLOCKS_PER_SEC;
-	DoSort(test_data, test_data_size);
+	ShelfSort(test_data, test_data_size);
 	float endTime = (float)clock() / CLOCKS_PER_SEC;
 	time1 = endTime - startTime;
 	}
@@ -321,7 +321,7 @@ void RunTest(int log_size) {
 	///*
 	{
 	float startTime = (float)clock() / CLOCKS_PER_SEC;
-	DoSort(test_data, test_data_size);
+	ShelfSort(test_data, test_data_size);
 	float endTime = (float)clock() / CLOCKS_PER_SEC;
 	time_sorted = endTime - startTime;
 	}
@@ -342,7 +342,7 @@ void RunTest(int log_size) {
 			}
 		}
 
-	std::cout << "block sort time: "; std::cout << time1;
+	std::cout << "shelfsort time: "; std::cout << time1;
 	std::cout << " / presorted: "; std::cout << time_sorted; std::cout << "\n";
 	std::cout << "std::stable_sort time: "; std::cout << time_standard; std::cout << "\n";
 	std::cout << "matching sort = "; std::cout << correct_sort; std::cout << "\n\n";
