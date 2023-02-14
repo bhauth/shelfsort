@@ -293,6 +293,7 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 		}
 
 	FinalBlockSorting(arr, scratch, indices_a, (sorted_zone_size / block_size), block_size);
+	free(allocated_memory);
 	}
 
 void RunTest(int log_size) {
@@ -346,6 +347,9 @@ void RunTest(int log_size) {
 	std::cout << " / presorted: "; std::cout << time_sorted; std::cout << "\n";
 	std::cout << "std::stable_sort time: "; std::cout << time_standard; std::cout << "\n";
 	std::cout << "matching sort = "; std::cout << correct_sort; std::cout << "\n\n";
+	
+	free(test_data);
+	free(test_data2);
 }
 
 int main() {
