@@ -239,8 +239,8 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 		}
 	unsigned int sorted_zone_size = SMALLSORT_SIZE;
 	
-	// optional pingpong quad merge (slightly faster)
-	while (sorted_zone_size <= (scratch_size / 4)) {
+	// pingpong quad merge
+	while (sorted_zone_size <= (scratch_size / 2)) {
 		unsigned int run_len = sorted_zone_size;
 		sorted_zone_size *= 2;
 		for (int i = 0; i < size; i += sorted_zone_size * 2) {
@@ -276,28 +276,13 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 		sorted_zone_size *= 2;
 		}
 
-	// final pair merge; a while loop can replace pingpong
-	if (sorted_zone_size <= (scratch_size / 2)) {
-		unsigned int run_len = sorted_zone_size;
-		sorted_zone_size *= 2;
-		for (int i = 0; i < size; i += sorted_zone_size) {
-			ELEMENT* p1 = &arr[i];
-			ELEMENT* p2 = &arr[i + run_len];
-			bool less = LESSEQ(p1[run_len-1], p2[0]);
-			if (!less) {  // skip if already sorted
-				MergePair(p1, p2, scratch, run_len-1);
-				memcpy(p1, scratch, sorted_zone_size * sizeof(ELEMENT));
-				}
-			}
-		}
-
-	// initialize block indices; always 2 block runs
+	// initialize block indices
 	unsigned int block_size = scratch_size / 2;
 	int total_blocks = size / block_size;
-	for (int i = 0; i < total_blocks; i += 2) {
-		indices_a[i] = 0;
-		indices_a[i + 1] = 1;
-		}
+	int blocks_per_run = sorted_zone_size / block_size;
+	for (int i = 0; i < total_blocks; i += blocks_per_run)
+		for (int j = 0; j < blocks_per_run; j += 1)
+			indices_a[i + j] = j;
 	
 	// do the block sorting runs
 	while (sorted_zone_size <= (size / 2)) {
