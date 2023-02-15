@@ -22,20 +22,23 @@ inline void SmallSort(ELEMENT* arr) {
 	auto c2 = less2 ? d : c;
 	auto d2 = less2 ? c : d;
 	
-	bool x = LESS(c2, a2);
-	arr[0] = x ? c2 : a2;
-	a2 = x ? a2 : b2;
-	c2 = x ? d2 : c2;
-	b2 = x ? b2 : d2;
+	if (LESSEQ(b2, c2)) {
+		arr[0] = a2;
+		arr[1] = b2;
+		arr[2] = c2;
+		arr[3] = d2;
+		return;
+		}
 	
-	x = LESS(c2, a2);
-	arr[1] = x ? c2 : a2;
-	a2 = x ? a2 : b2;
-	c2 = x ? b2 : c2;
-
-	x = LESS(c2, a2);
-	arr[2] = x ? c2 : a2;
-	arr[3] = x ? a2 : c2;
+	bool x = LESSEQ(a2, c2);
+	auto b3 = x ? c2 : a2;
+	bool y = LESSEQ(b2, d2);
+	auto c3 = y ? b2 : d2;
+	bool z = LESSEQ(a2, d2);
+	arr[0] = x ? a2 : c2;
+	arr[1] = z ? b3 : c3;
+	arr[2] = z ? c3 : b3;
+	arr[3] = y ? d2 : b2;
 	}
 
 void MergePair(ELEMENT* p1, ELEMENT* p2, ELEMENT* output, int n) { // n = size-1
