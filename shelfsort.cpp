@@ -7,14 +7,35 @@
 #define ELEMENT int64_t
 #define LESSEQ(a,b) a <= b
 #define LESS(a,b) a < b
-#define SMALLSORT_SIZE 2
+#define SMALLSORT_SIZE 4
 
-inline void SwapPair(ELEMENT* arr) {
-	auto x = arr[0];
-	auto y = arr[1];
-	bool less = LESS(y,x);
-	arr[0] = less ? y : x;
-	arr[1] = less ? x : y;
+inline void SmallSort(ELEMENT* arr) {
+	auto a = arr[0];
+	auto b = arr[1];
+	auto c = arr[2];
+	auto d = arr[3];
+	
+	bool less1 = LESS(b,a);
+	auto a2 = less1 ? b : a;
+	auto b2 = less1 ? a : b;
+	bool less2 = LESS(d,c);
+	auto c2 = less2 ? d : c;
+	auto d2 = less2 ? c : d;
+	
+	bool x = LESS(c2, a2);
+	arr[0] = x ? c2 : a2;
+	a2 = x ? a2 : b2;
+	c2 = x ? d2 : c2;
+	b2 = x ? b2 : d2;
+	
+	x = LESS(c2, a2);
+	arr[1] = x ? c2 : a2;
+	a2 = x ? a2 : b2;
+	c2 = x ? b2 : c2;
+
+	x = LESS(c2, a2);
+	arr[2] = x ? c2 : a2;
+	arr[3] = x ? a2 : c2;
 	}
 
 void MergePair(ELEMENT* p1, ELEMENT* p2, ELEMENT* output, int n) { // n = size-1
@@ -214,7 +235,7 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 
 	// test other small sorts?
 	for (int i = 0; i < size; i += SMALLSORT_SIZE) {
-		SwapPair(&arr[i]);
+		SmallSort(&arr[i]);
 		}
 	unsigned int sorted_zone_size = SMALLSORT_SIZE;
 	
