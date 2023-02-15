@@ -34,6 +34,15 @@ Here's an example of merging blocks:
 
 5. Once all data has been merged, the blocks are sorted according to their location indices.
 
+#### How fast is Shelfsort?
+For large arrays, compared to std::stable_sort with unlimited memory, this implementation takes: 
+- ~1.1x the time for random inputs
+- ~0.1x the time for sorted inputs
+
+[Here are some times](times.md) I got from running the included code.
+
+#### Why name it "Shelfsort"?
+The block locations are fixed while elements move between them, like books being moved between shelves. Also, "block sort" was taken.
 
 #### Why a new sorting algorithm?
 Most sorting algorithms are either unstable, slow, or require O(N) memory. There are merge sorts using binary search to partition blocks to reduce memory consumption, such as [blitsort](https://github.com/scandum/blitsort/), but this is a different approach that doesn't use binary search.
@@ -45,16 +54,9 @@ Most sorting algorithms are either unstable, slow, or require O(N) memory. There
 - I'm currently unemployed, and the weather's been bad, so I had some free time.
 - It will probably get HR people to not throw out my resume. <- this is sarcasm
 
-#### How fast is Shelfsort?
-For large arrays, compared to std::stable_sort with unlimited memory, this implementation takes: 
-- ~1.1x the time for random inputs
-- ~0.1x the time for sorted inputs
-
-[Here are some times](times.md) I got from running the included code.
-
 #### How optimized is this implementation?
 It's written in low-level C++ and does some branchless operations, but apart from that, it's not very optimized. Things I *haven't* done include:
-- trying different initial sorts for small segments
+- trying initial sorts for small segments that handle >4 elements
 - looking at the assembly code
 - manual vectorization
 

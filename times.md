@@ -1,30 +1,29 @@
-Times are in seconds.
 
 **test: 2^18 elements**  
-block sort time: 0.024 / presorted: 0  
-std::stable_sort time: 0.021
+shelfsort time: 24.0ms / presorted: 0.0ms  
+std::stable_sort time: 19.999ms / presorted: 3.0ms
 
 **test: 2^19 elements**  
-block sort time: 0.05 / presorted: 0.001  
-std::stable_sort time: 0.043
+shelfsort time: 50.999ms / presorted: 0.0ms  
+std::stable_sort time: 43.0ms / presorted: 8.999ms
 
 **test: 2^20 elements**  
-block sort time: 0.101 / presorted: 0.003  
-std::stable_sort time: 0.087
+shelfsort time: 101.999ms / presorted: 2.0ms  
+std::stable_sort time: 87.999ms / presorted: 17.0ms
 
 **test: 2^21 elements**  
-block sort time: 0.201 / presorted: 0.005  
-std::stable_sort time: 0.183
+shelfsort time: 201.0ms / presorted: 4.999ms  
+std::stable_sort time: 185.0ms / presorted: 41.0ms
 
 **test: 2^22 elements**  
-block sort time: 0.414 / presorted: 0.009  
-std::stable_sort time: 0.373
+shelfsort time: 414.0ms / presorted: 8.999ms  
+std::stable_sort time: 372.0ms / presorted: 86.0ms
 
 **test: 2^23 elements**  
-block sort time: 0.836 / presorted: 0.019  
-std::stable_sort time: 0.758
+shelfsort time: 839.999ms / presorted: 17.0ms  
+std::stable_sort time: 749.0ms / presorted: 187.0ms
 
 **test: 2^24 elements**  
-block sort time: 1.68 / presorted: 0.038  
-std::stable_sort time: 1.513
+shelfsort time: 1705.999ms / presorted: 35.0ms  
+std::stable_sort time: 1523.0ms / presorted: 381.0ms
 
