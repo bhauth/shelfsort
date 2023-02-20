@@ -262,7 +262,6 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 			bool less2 = LESSEQ(p3[run_len-1], p4[0]);
 			if (!less2) {
 				MergePair(p3, p4, scratch2, run_len-1);
-				if (less1) {COPY(scratch, p1, sorted_zone_size);}
 				}
 
 			if (less1 || less2) {
