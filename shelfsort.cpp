@@ -231,7 +231,9 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 	unsigned int scratch_size = 1 << (2 + (log_size + 1) / 2);
 
 	// allocate memory
-	char* allocated_memory = reinterpret_cast<char*> (malloc(scratch_size * (sizeof(ELEMENT) + 2 * sizeof(uint32_t))));
+	char* allocated_memory = reinterpret_cast<char*> (malloc(scratch_size *
+			(sizeof(ELEMENT)
+			+ std::max(sizeof(ELEMENT), 2 * sizeof(uint32_t)))));
 	ELEMENT* scratch = reinterpret_cast<ELEMENT*> (allocated_memory);
 	uint32_t* indices_a = reinterpret_cast<uint32_t*> (&allocated_memory[scratch_size * (sizeof(ELEMENT))]);
 	uint32_t* indices_b = &indices_a[scratch_size];
