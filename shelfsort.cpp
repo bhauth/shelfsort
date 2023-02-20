@@ -307,55 +307,66 @@ void ShelfSort(ELEMENT* arr, unsigned int size) {
 
 #define OUT(data) std::cout << data
 
-#define TIMED_TEST(function, arg1, arg2, result) { \
-	double startTime = (double)clock() / CLOCKS_PER_SEC; \
-	function(arg1, arg2); \
-	double endTime = (double)clock() / CLOCKS_PER_SEC; \
-	result = endTime - startTime; \
+double TimedTest_Shelfsort(ELEMENT* test_data, int test_size, int cycles) {
+	double startTime = (double)clock() / CLOCKS_PER_SEC;
+	for (int i=0; i<cycles; i++) {
+		ShelfSort(&test_data[i * test_size], test_size);
+		}
+	double endTime = (double)clock() / CLOCKS_PER_SEC;
+	return endTime - startTime;
 	}
 
-void WriteTime(double time) {
-	int us = (int)(time * 1000000);
-	OUT(us / 1000); OUT("."); OUT(us % 1000); OUT("ms");
+double TimedTest_stable_sort(ELEMENT* test_data, int test_size, int cycles) {
+	double startTime = (double)clock() / CLOCKS_PER_SEC;
+	for (int i=0; i<cycles; i++) {
+		std::stable_sort(&test_data[i * test_size], &test_data[(i + 1) * test_size]);
+		}
+	double endTime = (double)clock() / CLOCKS_PER_SEC;
+	return endTime - startTime;
 	}
 
-void RunTest(int log_size) {
-    OUT("beginning test: 2^"); OUT(log_size); OUT("\n");
+void WriteTime(double time, int total_size) {
+	double ns = (time * 1000000000) / total_size;
+	OUT((int)ns); OUT("."); OUT(((int)(ns * 100)) % 100);
+	}
 
-	int test_data_size = 1 << log_size;
-	ELEMENT* test_data = reinterpret_cast<ELEMENT*> (malloc(test_data_size * (sizeof(ELEMENT))));
-	ELEMENT* test_data2 = reinterpret_cast<ELEMENT*> (malloc(test_data_size * (sizeof(ELEMENT))));
+void RunTest(int log_size, int total_size) {
+	int test_size = 1 << log_size;
+	total_size = std::max(test_size, total_size);
+	int cycles = total_size / test_size;
+	total_size = cycles * test_size;
+	ELEMENT* test_data = reinterpret_cast<ELEMENT*> (malloc(total_size * (sizeof(ELEMENT))));
+	ELEMENT* test_data2 = reinterpret_cast<ELEMENT*> (malloc(total_size * (sizeof(ELEMENT))));
+
+    OUT("beginning test: 2^"); OUT(log_size); OUT(" size blocks, ");
+	OUT(cycles);  OUT(" cycles\n");
 
 	srand(time(0));
-	for (int i = 0; i < test_data_size; i++) {
+	for (int i = 0; i < test_size; i++) {
 		ELEMENT x = rand();
 		test_data[i] = x;
 		test_data2[i] = x;
 		}
 	
-	float time1 = -1;
-	TIMED_TEST(ShelfSort, test_data, test_data_size, time1);
-
-	float time1_sorted = -1;
-	TIMED_TEST(ShelfSort, test_data, test_data_size, time1_sorted);
+	double time1 = TimedTest_Shelfsort(test_data, test_size, cycles);
+	double time1_sorted = -1;
+	time1_sorted = TimedTest_Shelfsort(test_data, test_size, cycles);
 	
-	float time_std = -1;
-	TIMED_TEST(std::stable_sort, test_data2, &test_data2[test_data_size], time_std);
-
-	float time_std_sorted = -1;
-	TIMED_TEST(std::stable_sort, test_data2, &test_data2[test_data_size], time_std_sorted);
+	double time_std = TimedTest_stable_sort(test_data2, test_size, cycles);
+	double time_std_sorted = -1;
+	time_std_sorted = TimedTest_stable_sort(test_data2, test_size, cycles);
 
 	bool correct_sort = true;
-	for (int i=0; i < test_data_size; i++) {
+	for (int i=0; i < total_size; i++) {
 		if (test_data[i] != test_data2[i]) {
 			correct_sort = false;
 			}
 		}
 
-	OUT("shelfsort time: "); WriteTime(time1);
-	OUT(" / presorted: "); WriteTime(time1_sorted); OUT("\n");
-	OUT("std::stable_sort time: "); WriteTime(time_std);
-	OUT(" / presorted: "); WriteTime(time_std_sorted); OUT("\n");
+	OUT("shelfsort time: "); WriteTime(time1, total_size);
+	OUT(" / presorted: "); WriteTime(time1_sorted, total_size); OUT("\n");
+	OUT("std::stable_sort time: "); WriteTime(time_std, total_size);
+	OUT(" / presorted: "); WriteTime(time_std_sorted, total_size); OUT("\n");
 	OUT("matching sort = "); OUT(correct_sort); OUT("\n\n");
 	
 	free(test_data);
@@ -363,7 +374,10 @@ void RunTest(int log_size) {
 }
 
 int main() {
-	for (int size = 18; size <= 24; size++)
-		{ RunTest(size); }
+	OUT("Shelfsort speed test\n");
+	OUT("times are in ns/item\n\n");
+	int total_size = 1 << 22;
+	for (int size = 16; size <= 24; size++)
+		{ RunTest(size, total_size); }
 }
 
